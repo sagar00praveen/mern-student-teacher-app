@@ -1,7 +1,9 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// Access the API URL from the environment variables
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateExam = () => {
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ const CreateExam = () => {
     newQuestions[qIndex].options[optIndex].optionText = value;
 
     // If the edited option was the correct answer, update it
+    // This is important because the correct answer is stored as the optionText string
     if (
       newQuestions[qIndex].correctAnswer ===
       newQuestions[qIndex].options[optIndex].optionText
@@ -62,11 +65,18 @@ const CreateExam = () => {
     e.preventDefault();
     setMessage("");
 
+    // Basic validation to check if API_URL is defined
+    if (!API_URL) {
+      setMessage("Error: VITE_API_URL is not defined in environment variables.");
+      return;
+    }
+    
     try {
       const token = localStorage.getItem("token");
 
+      // Construct the full API endpoint using the environment variable
       const { data } = await axios.post(
-        "http://localhost:5000/api/teachers/create-exam",
+        `${API_URL}/teachers/create-exam`,
         examData,
         {
           headers: {
@@ -76,7 +86,8 @@ const CreateExam = () => {
         }
       );
 
-      setMessage(` Exam "${data.examTitle}" created successfully!`);
+      // Removed emoji
+      setMessage(`Exam "${data.examTitle}" created successfully!`);
 
       // Reset form
       setExamData({
@@ -95,7 +106,8 @@ const CreateExam = () => {
         })),
       });
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || err.message}`);
+      // Removed emoji
+      setMessage(`${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -207,7 +219,7 @@ const CreateExam = () => {
               onClick={() => navigate("/teacher-dashboard")}
               className="w-full md:w-1/2 py-3 bg-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-400 transition"
             >
-              ⬅ Back to Dashboard
+              Back to Dashboard
             </button>
           </div>
 
