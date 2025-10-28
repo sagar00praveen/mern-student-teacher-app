@@ -60,7 +60,7 @@ const Home = () => {
 
    
       <footer className="w-full bg-gray-800 text-gray-400 py-6 text-center">
-        <p>&copy; 2025 NRI. All rights reserved.</p>
+        <p>&copy; 2025. All rights reserved.</p>
       </footer>
     </div>
   );
