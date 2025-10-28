@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// Access the API URL from the environment variables
+const API_URL = import.meta.env.VITE_API_URL;
+
 const StudentLogin = () => {
   const [rollNumber, setRollNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -12,13 +15,21 @@ const StudentLogin = () => {
     e.preventDefault();
     setError("");
 
+    // Basic validation to check if API_URL is defined
+    if (!API_URL) {
+        setError("Error: VITE_API_URL is not defined in environment variables.");
+        return;
+    }
+
     try {
+      // Construct the full API endpoint using the environment variable
       const { data } = await axios.post(
-        "http://localhost:5000/api/students/login",
+        `${API_URL}/students/login`,
         { rollNumber, password },
         { headers: { "Content-Type": "application/json" } }
       );
 
+      // Store user-related data upon successful login
       localStorage.setItem("token", data.token);
       localStorage.setItem("studentName", data.name);
       localStorage.setItem("rollNumber", data.rollNumber);
@@ -34,6 +45,48 @@ const StudentLogin = () => {
       <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Student Login</h2>
 
+        <form onSubmit={handleLogin} className="space-y-6">
+          <input
+            type="text"
+            placeholder="Roll Number"
+            value={rollNumber}
+            onChange={(e) => setRollNumber(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
+            required
+          />
+
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-gray-800 text-white hover:bg-gray-900 text-white font-semibold rounded-xl  transition"
+          >
+            Login
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="w-full py-3 bg-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-400 transition"
+          >
+            Back to Home
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default StudentLogin;
         <form onSubmit={handleLogin} className="space-y-6">
           <input
             type="text"
