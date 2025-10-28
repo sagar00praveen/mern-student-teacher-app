@@ -1,210 +1,69 @@
-import React, { useState } from "react";
+
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
-const CreateExam = () => {
+
+import Header from "../components/Header"; 
+import About from "../components/About";
+import Courses from "../components/Courses";
+import Trainers from "../components/Trainers";
+import Contact from "../components/Contact";
+
+const Home = () => {
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
+  console.log(import.meta.env.VITE_API_URL)
 
-  const [examData, setExamData] = useState({
-    examTitle: "",
-    subject: "",
-    className: "",
-    questions: Array.from({ length: 10 }, () => ({
-      questionText: "",
-      options: [
-        { optionText: "" },
-        { optionText: "" },
-        { optionText: "" },
-        { optionText: "" },
-      ],
-      correctAnswer: "",
-    })),
-  });
-
-  const [message, setMessage] = useState("");
-
-  const handleExamChange = (e) => {
-    setExamData({ ...examData, [e.target.name]: e.target.value });
-  };
-
-  const handleQuestionChange = (index, value) => {
-    const newQuestions = [...examData.questions];
-    newQuestions[index].questionText = value;
-    setExamData({ ...examData, questions: newQuestions });
-  };
-
-  const handleOptionChange = (qIndex, optIndex, value) => {
-    const newQuestions = [...examData.questions];
-    newQuestions[qIndex].options[optIndex].optionText = value;
-    if (
-      newQuestions[qIndex].correctAnswer ===
-      newQuestions[qIndex].options[optIndex].optionText
-    ) {
-      newQuestions[qIndex].correctAnswer = value;
-    }
-    setExamData({ ...examData, questions: newQuestions });
-  };
-
-  const handleCorrectAnswerSelect = (qIndex, value) => {
-    const newQuestions = [...examData.questions];
-    newQuestions[qIndex].correctAnswer = value;
-    setExamData({ ...examData, questions: newQuestions });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-
-    try {
-      const token = localStorage.getItem("token");
-      const { data } = await axios.post(
-        `${API_URL}/teachers/create-exam`,
-        examData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setMessage(`Exam "${data.examTitle}" created successfully!`);
-      setExamData({
-        examTitle: "",
-        subject: "",
-        className: "",
-        questions: Array.from({ length: 10 }, () => ({
-          questionText: "",
-          options: [
-            { optionText: "" },
-            { optionText: "" },
-            { optionText: "" },
-            { optionText: "" },
-          ],
-          correctAnswer: "",
-        })),
-      });
-    } catch (err) {
-      setMessage(err.response?.data?.message || err.message);
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-50 via-cyan-50 to-white py-10 px-6 overflow-y-auto">
-      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl border border-gray-200 p-10">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
-          Create New Exam
-        </h2>
+    <div className="flex flex-col min-h-screen">
+      <Header />
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            <input
-              type="text"
-              name="examTitle"
-              placeholder="Exam Title"
-              value={examData.examTitle}
-              onChange={handleExamChange}
-              required
-              className="px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400 outline-none"
-            />
+      {/* Hero Section */}
+      <main
+        id="home" 
+        className="flex-grow flex flex-col items-center justify-center text-center px-4 pt-32 pb-20 bg-gray-50" // Increased top padding
+      >
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 max-w-3xl">
+          Learning Today, Leading Tomorrow
+        </h1>
+        <p className="text-lg text-gray-600 mb-10 max-w-2xl">
+          Welcome to our collage portal. Please select your login type to access
+          your dashboard.
+        </p>
+        
 
-            <input
-              type="text"
-              name="subject"
-              placeholder="Subject"
-              value={examData.subject}
-              onChange={handleExamChange}
-              required
-              className="px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400 outline-none"
-            />
+        
+        <div
+          id="login" 
+          className="flex flex-col md:flex-row items-center justify-center gap-6"
+        >
+          <button
+            onClick={() => navigate("/student-login")}
+            className="px-10 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition transform hover:-translate-y-1"
+          >
+            Student Login
+          </button>
+          <button
+            onClick={() => navigate("/teacher-login")}
+            className="px-10 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition transform hover:-translate-y-1"
+          >
+            Teacher Login
+          </button>
+        </div>
+      </main>
 
-            <input
-              type="text"
-              name="className"
-              placeholder="Class (e.g., 10A)"
-              value={examData.className}
-              onChange={handleExamChange}
-              required
-              className="px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400 outline-none"
-            />
-          </div>
+     
+      <About />
+      <Courses />
+      <Trainers />
+      <Contact />
 
-          <div className="space-y-10">
-            {examData.questions.map((q, qIndex) => (
-              <div
-                key={qIndex}
-                className="border border-gray-200 rounded-2xl p-6 shadow-sm bg-gray-50"
-              >
-                <h3 className="text-lg font-semibold mb-4 text-gray-700">
-                  Question {qIndex + 1}
-                </h3>
-
-                <input
-                  type="text"
-                  placeholder="Enter question text"
-                  value={q.questionText}
-                  onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                  required
-                  className="w-full px-4 py-3 mb-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400 outline-none"
-                />
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  {q.options.map((opt, optIndex) => (
-                    <label
-                      key={optIndex}
-                      className="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-300 shadow-sm hover:bg-cyan-50 transition"
-                    >
-                      <input
-                        type="radio"
-                        name={`correctAnswer-${qIndex}`}
-                        value={opt.optionText}
-                        checked={q.correctAnswer === opt.optionText}
-                        onChange={() =>
-                          handleCorrectAnswerSelect(qIndex, opt.optionText)
-                        }
-                      />
-                      <input
-                        type="text"
-                        placeholder={`Option ${optIndex + 1}`}
-                        value={opt.optionText}
-                        onChange={(e) =>
-                          handleOptionChange(qIndex, optIndex, e.target.value)
-                        }
-                        required
-                        className="flex-1 px-3 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-cyan-400 outline-none"
-                      />
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-4 justify-between">
-            <button
-              type="submit"
-              className="w-full md:w-1/2 py-3 bg-cyan-500 text-white font-semibold rounded-xl hover:bg-cyan-600 transition"
-            >
-              Create Exam
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/teacher-dashboard")}
-              className="w-full md:w-1/2 py-3 bg-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-400 transition"
-            >
-              Back to Dashboard
-            </button>
-          </div>
-
-          {message && (
-            <p className="text-center mt-6 text-gray-700 text-sm">{message}</p>
-          )}
-        </form>
-      </div>
+   
+      <footer className="w-full bg-gray-800 text-gray-400 py-6 text-center">
+        <p>&copy; 2025 NRI. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
 
-export default CreateExam;
+export default Home;
