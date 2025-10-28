@@ -27,7 +27,7 @@ const Home = () => {
           Learning Today, Leading Tomorrow
         </h1>
         <p className="text-lg text-gray-600 mb-10 max-w-2xl">
-          Welcome to our collage portal. Please select your login type to access
+          Welcome to our school portal. Please select your login type to access
           your dashboard.
         </p>
         
