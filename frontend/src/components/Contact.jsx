@@ -11,7 +11,7 @@ const Contact = () => {
           Get in Touch
         </h2>
         <p className="text-center text-gray-600 max-w-lg mx-auto mb-8">
-          Have questions? We'd love to hear from you. Click the button below to
+           Click the button below to
           send us an email.
         </p>
         <div className="text-center">
