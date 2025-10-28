@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,49 +34,6 @@ const TeacherInfo = () => {
         <h2 className="text-2xl font-semibold text-blue-600 mb-4 text-center">
           Teacher Information
         </h2>
-
-        <p className="text-gray-700">
-          <strong>Name:</strong> {teacher.name}
-        </p>
-        <p className="text-700">
-          <strong>Roll Number:</strong> {teacher.rollNumber}
-        </p>
-
-        <button
-          onClick={handleLogout}
-          className="w-full mt-6 bg-gray-800 text-white hover:bg-gray-900 py-2 rounded-lg font-semibold transition"
-        >
-          Logout
-        </button>
-      </div>
-
-      
-      <div className="mt-10 w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-        <h2 className="text-2xl font-semibold text-green-600 mb-6 text-center">
-          Manage Classroom
-        </h2>
-
-        <div className="flex flex-col md:flex-row justify-center gap-6">
-          <button
-            onClick={() => navigate("/add-student")}
-            className="w-full md:w-auto bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition"
-          >
-             Add Student
-          </button>
-
-          <button
-            onClick={() => navigate("/create-exam")}
-            className="w-full md:w-auto bg-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-600 transition"
-          >
-             Create Exam
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default TeacherInfo;
 
         <p className="text-gray-700">
           <strong>Name:</strong> {teacher.name}
