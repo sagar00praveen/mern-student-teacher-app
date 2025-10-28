@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// Access the API URL from the environment variables
-const API_URL = import.meta.env.VITE_API_URL;
-
 const AddStudent = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -24,18 +21,10 @@ const AddStudent = () => {
     e.preventDefault();
     setMessage("");
 
-    // Basic validation to check if API_URL is defined
-    if (!API_URL) {
-      setMessage("Error: VITE_API_URL is not defined in environment variables.");
-      return;
-    }
-
     try {
       const token = localStorage.getItem("token");
-
-      // Construct the full API endpoint using the environment variable
       const { data } = await axios.post(
-        `${API_URL}/teachers/add-student`,
+        `${import.meta.env.VITE_API_URL}/teachers/add-student`,
         formData,
         {
           headers: {
@@ -54,15 +43,16 @@ const AddStudent = () => {
         className: "",
       });
     } catch (err) {
-      // Removed emoji from the error message as requested
-      setMessage(`${err.response?.data?.message || err.message}`);
+      setMessage(err.response?.data?.message || err.message);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-100 via-emerald-50 to-white px-4">
       <div className="w-full max-w-lg bg-white p-10 rounded-3xl shadow-2xl border border-gray-200">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Add New Student</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Add New Student
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -127,7 +117,7 @@ const AddStudent = () => {
             onClick={() => navigate("/teacher-dashboard")}
             className="w-full py-3 bg-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-400 transition"
           >
-            Back to Dashboard
+            ⬅ Back to Dashboard
           </button>
         </form>
 
