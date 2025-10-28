@@ -29,7 +29,7 @@ app.use("/api/exams", questionRoutes);
 
 
 app.get("/", (req, res) => {
-  res.send(" School MERN API is running...");
+  res.send(" NRI MERN API is running...");
 });
 
 
