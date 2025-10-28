@@ -11,6 +11,8 @@ import Contact from "../components/Contact";
 
 const Home = () => {
   const navigate = useNavigate();
+  console.log(import.meta.env.VITE_API_URL)
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -28,6 +30,7 @@ const Home = () => {
           Welcome to our collage portal. Please select your login type to access
           your dashboard.
         </p>
+        
 
         
         <div
