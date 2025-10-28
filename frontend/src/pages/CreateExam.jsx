@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// Access the API URL from the environment variables
-const API_URL = import.meta.env.VITE_API_URL;
-
 const CreateExam = () => {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [examData, setExamData] = useState({
     examTitle: "",
@@ -26,12 +24,10 @@ const CreateExam = () => {
 
   const [message, setMessage] = useState("");
 
-  
   const handleExamChange = (e) => {
     setExamData({ ...examData, [e.target.name]: e.target.value });
   };
 
-  
   const handleQuestionChange = (index, value) => {
     const newQuestions = [...examData.questions];
     newQuestions[index].questionText = value;
@@ -41,20 +37,15 @@ const CreateExam = () => {
   const handleOptionChange = (qIndex, optIndex, value) => {
     const newQuestions = [...examData.questions];
     newQuestions[qIndex].options[optIndex].optionText = value;
-
-    // If the edited option was the correct answer, update it
-    // This is important because the correct answer is stored as the optionText string
     if (
       newQuestions[qIndex].correctAnswer ===
       newQuestions[qIndex].options[optIndex].optionText
     ) {
       newQuestions[qIndex].correctAnswer = value;
     }
-
     setExamData({ ...examData, questions: newQuestions });
   };
 
-  
   const handleCorrectAnswerSelect = (qIndex, value) => {
     const newQuestions = [...examData.questions];
     newQuestions[qIndex].correctAnswer = value;
@@ -65,16 +56,8 @@ const CreateExam = () => {
     e.preventDefault();
     setMessage("");
 
-    // Basic validation to check if API_URL is defined
-    if (!API_URL) {
-      setMessage("Error: VITE_API_URL is not defined in environment variables.");
-      return;
-    }
-    
     try {
       const token = localStorage.getItem("token");
-
-      // Construct the full API endpoint using the environment variable
       const { data } = await axios.post(
         `${API_URL}/teachers/create-exam`,
         examData,
@@ -86,10 +69,7 @@ const CreateExam = () => {
         }
       );
 
-      // Removed emoji
       setMessage(`Exam "${data.examTitle}" created successfully!`);
-
-      // Reset form
       setExamData({
         examTitle: "",
         subject: "",
@@ -106,8 +86,7 @@ const CreateExam = () => {
         })),
       });
     } catch (err) {
-      // Removed emoji
-      setMessage(`${err.response?.data?.message || err.message}`);
+      setMessage(err.response?.data?.message || err.message);
     }
   };
 
@@ -151,7 +130,6 @@ const CreateExam = () => {
             />
           </div>
 
-         
           <div className="space-y-10">
             {examData.questions.map((q, qIndex) => (
               <div
@@ -166,9 +144,7 @@ const CreateExam = () => {
                   type="text"
                   placeholder="Enter question text"
                   value={q.questionText}
-                  onChange={(e) =>
-                    handleQuestionChange(qIndex, e.target.value)
-                  }
+                  onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
                   required
                   className="w-full px-4 py-3 mb-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-400 outline-none"
                 />
@@ -205,7 +181,6 @@ const CreateExam = () => {
             ))}
           </div>
 
-        
           <div className="flex flex-col md:flex-row gap-4 justify-between">
             <button
               type="submit"
