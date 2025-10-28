@@ -6,7 +6,7 @@ const Header = () => {
     <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
     
-        <h1 className="text-3xl font-bold text-gray-800">NRI</h1>
+        <h1 className="text-3xl font-bold text-gray-800">SCHOOL PORTAL</h1>
 
       
         <div className="hidden md:flex space-x-6">
