@@ -2,34 +2,24 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// Access the API URL from the environment variables
-const API_URL = import.meta.env.VITE_API_URL;
-
 const StudentLogin = () => {
   const [rollNumber, setRollNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
-    // Basic validation to check if API_URL is defined
-    if (!API_URL) {
-      setError("Error: VITE_API_URL is not defined in environment variables.");
-      return;
-    }
-
     try {
-      // Construct the full API endpoint using the environment variable
       const { data } = await axios.post(
         `${API_URL}/students/login`,
         { rollNumber, password },
         { headers: { "Content-Type": "application/json" } }
       );
 
-      // Store user-related data upon successful login
       localStorage.setItem("token", data.token);
       localStorage.setItem("studentName", data.name);
       localStorage.setItem("rollNumber", data.rollNumber);
@@ -52,7 +42,6 @@ const StudentLogin = () => {
             value={rollNumber}
             onChange={(e) => setRollNumber(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
-            required
           />
 
           <input
@@ -61,14 +50,13 @@ const StudentLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
-            required
           />
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           <button
             type="submit"
-            className="w-full py-3 bg-gray-800 text-white hover:bg-gray-900 text-white font-semibold rounded-xl transition"
+            className="w-full py-3 bg-gray-800 text-white hover:bg-gray-900 font-semibold rounded-xl transition"
           >
             Login
           </button>
