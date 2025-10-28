@@ -1,7 +1,9 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// Access the API URL from the environment variables
+const API_URL = import.meta.env.VITE_API_URL;
 
 const AddStudent = () => {
   const [formData, setFormData] = useState({
@@ -22,11 +24,18 @@ const AddStudent = () => {
     e.preventDefault();
     setMessage("");
 
+    // Basic validation to check if API_URL is defined
+    if (!API_URL) {
+      setMessage("Error: VITE_API_URL is not defined in environment variables.");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
 
+      // Construct the full API endpoint using the environment variable
       const { data } = await axios.post(
-        "http://localhost:5000/api/teachers/add-student",
+        `${API_URL}/teachers/add-student`,
         formData,
         {
           headers: {
@@ -36,7 +45,7 @@ const AddStudent = () => {
         }
       );
 
-      setMessage(` Student "${data.name}" added successfully!`);
+      setMessage(`Student "${data.name}" added successfully!`);
       setFormData({
         name: "",
         rollNumber: "",
@@ -45,7 +54,8 @@ const AddStudent = () => {
         className: "",
       });
     } catch (err) {
-      setMessage(`❌ ${err.response?.data?.message || err.message}`);
+      // Removed emoji from the error message as requested
+      setMessage(`${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -117,7 +127,7 @@ const AddStudent = () => {
             onClick={() => navigate("/teacher-dashboard")}
             className="w-full py-3 bg-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-400 transition"
           >
-            ⬅ Back to Dashboard
+            Back to Dashboard
           </button>
         </form>
 
