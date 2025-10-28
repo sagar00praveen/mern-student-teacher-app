@@ -2,22 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// Access the API URL from the environment variables
-const API_URL = import.meta.env.VITE_API_URL;
-
 const StudentInfo = () => {
   const [student, setStudent] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchStudent = async () => {
-      // Basic validation to check if API_URL is defined
-      if (!API_URL) {
-        setError("Error: VITE_API_URL is not defined in environment variables.");
-        return;
-      }
-
       try {
         const rollNumber = localStorage.getItem("rollNumber");
 
@@ -26,10 +18,7 @@ const StudentInfo = () => {
           return;
         }
 
-        // Construct the full API endpoint using the environment variable
-        const { data } = await axios.get(
-          `${API_URL}/students/${rollNumber}`
-        );
+        const { data } = await axios.get(`${API_URL}/students/${rollNumber}`);
 
         if (data && data.student) {
           setStudent(data.student);
@@ -37,13 +26,12 @@ const StudentInfo = () => {
           setStudent(data);
         }
       } catch (err) {
-        // Removed emoji and kept the error message clean
         setError(err.response?.data?.message || "Error fetching student data");
       }
     };
 
     fetchStudent();
-  }, []);
+  }, [API_URL]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -51,8 +39,7 @@ const StudentInfo = () => {
   };
 
   const handleTakeExam = (examId) => {
-    // Uses optional chaining on examId for robustness
-    const id = examId?._id || examId; 
+    const id = examId?._id || examId;
     navigate(`/exam/${id}`);
   };
 
@@ -66,10 +53,7 @@ const StudentInfo = () => {
       <p className="text-gray-600 text-center mt-10 text-lg">Loading...</p>
     );
 
-  // Safely access the exams array
   const allExams = student.exams || [];
-
-  // Filter exams that are pending (case-insensitive and trimmed)
   const pendingExams = allExams.filter(
     (exam) => exam?.status?.trim().toLowerCase() === "pending"
   );
@@ -80,23 +64,22 @@ const StudentInfo = () => {
         Student Dashboard
       </h1>
 
-      {/* Student Information Card */}
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-100 space-y-3">
         <h2 className="text-2xl font-semibold text-blue-600 mb-4 text-center">
           Student Information
         </h2>
 
         <p className="text-gray-700">
-          <strong className="font-bold">Name:</strong> {student.name}
+          <strong>Name:</strong> {student.name}
         </p>
         <p className="text-gray-700">
-          <strong className="font-bold">Roll Number:</strong> {student.rollNumber}
+          <strong>Roll Number:</strong> {student.rollNumber}
         </p>
         <p className="text-gray-700">
-          <strong className="font-bold">Class:</strong> {student.className}
+          <strong>Class:</strong> {student.className}
         </p>
         <p className="text-gray-700">
-          <strong className="font-bold">Age:</strong> {student.age}
+          <strong>Age:</strong> {student.age}
         </p>
 
         <button
@@ -107,7 +90,6 @@ const StudentInfo = () => {
         </button>
       </div>
 
-      {/* Pending Exams Card */}
       <div className="mt-10 w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
         <h2 className="text-2xl font-semibold text-green-600 mb-4 text-center">
           Pending Exams
@@ -122,11 +104,9 @@ const StudentInfo = () => {
               >
                 <div>
                   <p className="text-gray-800">
-                    <strong className="font-medium">Subject:</strong> {exam.subject}
+                    <strong>Subject:</strong> {exam.subject}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Status: <span className="text-orange-500">{exam.status}</span>
-                  </p>
+                  <p className="text-sm text-gray-500">Status: {exam.status}</p>
                 </div>
                 <button
                   onClick={() => handleTakeExam(exam.examId)}
