@@ -16,10 +16,15 @@ connectDB();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"], 
+    origin: [
+      "http://localhost:5173", // local development
+      "https://mern-student-teacher-frontend.onrender.com" // deployed frontend
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
+
 app.use(express.json());
 
 
